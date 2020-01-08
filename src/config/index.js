@@ -1,6 +1,7 @@
-import resolvers from '../resolvers'
+
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import data from './data';
+import resolvers from '../apollo/resolvers';
+// import data from './data';
 
 const cache = new InMemoryCache({
   // freezeResults: true
@@ -16,9 +17,9 @@ const client = new ApolloClient({
   resolvers
 })
 
-cache.writeData({
-  data
-})
+// cache.writeData({
+//   data
+// })
 
 window.cache = client.cache.optimisticData.data
 

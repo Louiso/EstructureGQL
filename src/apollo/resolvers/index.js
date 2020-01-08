@@ -1,8 +1,8 @@
-import Home from './views/Home'
 import { mergeResolvers } from './utils'
+import { BookResolver } from '../Book'
 
 const resolvers = mergeResolvers([
-  Home
+  BookResolver
 ])
 
 export default resolvers

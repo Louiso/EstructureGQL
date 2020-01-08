@@ -1,40 +1,14 @@
 import React from 'react'
-import { GET_BOOKS } from '../../apollo/queries';
-import { useQuery, useMutation, gql } from '@apollo/client';
-import { ADD_BOOK } from '../../apollo/mutations/Book';
+import { useQuery, useMutation } from '@apollo/client';
+import {  GET_BOOKS, ADD_BOOK_LOCAL } from '../../apollo/Book/types';
+import { useAddBook } from '../../apollo/Book/hooks';
 
 const Home = ()  => {
-  const { data , loading } = useQuery(GET_BOOKS);
-  const [ addBook ] = useMutation(ADD_BOOK, {
-    update: (cache, { data: { addBook }}) => {
-      try {
-        const params = {
-          query: gql`
-            query {
-              bookList{
-                _id,
-                name
-              }
-            }
-          `
-        }
-        const { bookList } = cache.readQuery({
-          ...params 
-        })
-        cache.writeQuery({
-          ...params,
-          data: {
-            bookList: [...bookList, addBook]
-          }
-        })
-      } catch (error) {
-        console.log(error)  
-      }
-    
-    }
-  })
+  const { data , loading, error } = useQuery(GET_BOOKS);
+  const [ addBook ] = useAddBook()
+  const [addBookLocal] = useMutation(ADD_BOOK_LOCAL)
   if(loading) return <div>loading...</div>
-  
+  if(error) return <div>error...</div>
   const { bookList: books } = data
   
   return (
@@ -54,6 +28,15 @@ const Home = ()  => {
         })
       }}>
         add
+      </div>
+      <div onClick={() => {
+        addBookLocal({
+          variables: {
+            name: `${Math.random()}-random`
+          }
+        })
+      }}>
+        addBookLocal
       </div>
     </div>
   )
